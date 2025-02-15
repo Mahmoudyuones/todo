@@ -1,14 +1,23 @@
 import 'package:flutter/material.dart';
+import 'package:todo/appthem.dart';
+import 'package:todo/home_screen.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp(TodoApp());
 }
 
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+class TodoApp extends StatelessWidget {
+  const TodoApp({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp();
+    return MaterialApp(
+      debugShowCheckedModeBanner: false,
+      routes: {HomeScreen.routeName: (_) => HomeScreen()},
+      initialRoute: HomeScreen.routeName,
+      theme: Appthem.lighappthem,
+      darkTheme: Appthem.darckappthem,
+      themeMode: ThemeMode.light,
+    );
   }
 }
