@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:todo/appthem.dart';
 import 'package:todo/taps/settings/settings_tap.dart';
-import 'package:todo/taps/tasks/tasks.dart';
+import 'package:todo/taps/tasks/tasks_tap.dart';
 
 class HomeScreen extends StatefulWidget {
   static const String routeName = '/home';
-  List<StatelessWidget> taps = [
-    Tasks(),
+  final List<StatelessWidget> taps = [
+    TasksTap(),
     SettingsTap(),
   ];
 

@@ -25,6 +25,12 @@ class Appthem {
       foregroundColor: white,
       shape: CircleBorder(side: BorderSide(color: white, width: 4)),
     ),
+    textTheme: TextTheme(
+      titleMedium:
+          TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: primary),
+      titleSmall:
+          TextStyle(fontSize: 15, fontWeight: FontWeight.bold, color: black),
+    ),
   );
   static ThemeData darckappthem = ThemeData();
 }
