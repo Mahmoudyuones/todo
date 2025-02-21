@@ -7,8 +7,8 @@ class TaskItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: EdgeInsets.all(20),
-      decoration: BoxDecoration(
+      margin: const EdgeInsets.only(bottom: 20, left: 20, right: 20),
+      decoration: const BoxDecoration(
         color: Appthem.white,
         borderRadius: BorderRadius.all(
           Radius.circular(15),
@@ -17,7 +17,7 @@ class TaskItem extends StatelessWidget {
       child: Row(
         children: [
           Container(
-            margin: EdgeInsets.all(15),
+            margin: const EdgeInsets.all(15),
             decoration: BoxDecoration(
               color: Appthem.primary,
               borderRadius: BorderRadius.circular(20),
@@ -25,7 +25,7 @@ class TaskItem extends StatelessWidget {
             height: 62,
             width: 4,
           ),
-          Column(
+          const Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
@@ -39,7 +39,7 @@ class TaskItem extends StatelessWidget {
               Text('Task Description'),
             ],
           ),
-          Spacer(),
+          const Spacer(),
           Padding(
             padding: const EdgeInsets.all(15),
             child: ElevatedButton(
@@ -52,7 +52,7 @@ class TaskItem extends StatelessWidget {
                   borderRadius: BorderRadius.circular(15),
                 ),
               ),
-              child: Icon(Icons.done),
+              child: const Icon(Icons.done),
             ),
           ),
         ],

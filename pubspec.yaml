@@ -29,6 +29,7 @@ environment:
 # versions available, run `flutter pub outdated`.
 dependencies:
   easy_date_timeline: ^2.0.6
+  intl: ^0.19.0
   flutter:
     sdk: flutter
 
