@@ -6,7 +6,7 @@ import 'package:todo/taps/tasks/tasks_tap.dart';
 
 class HomeScreen extends StatefulWidget {
   static const String routeName = '/home';
-  final List<StatelessWidget> taps = [
+  final List<Widget> taps = [
     TasksTap(),
     SettingsTap(),
   ];

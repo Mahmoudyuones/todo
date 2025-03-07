@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:todo/appthem.dart';
+import 'package:todo/taps/tasks/task_model.dart';
 import 'package:todo/widgets/default_elevated_boutton.dart';
 import 'package:todo/widgets/default_text_form_field.dart';
 
@@ -60,7 +61,7 @@ class _TasksModelSheetState extends State<TasksModelSheet> {
               const SizedBox(
                 height: 40,
               ),
-              GestureDetector(
+              InkWell(
                 onTap: () async {
                   DateTime? dateTime = await showDatePicker(
                     context: context,
@@ -70,35 +71,39 @@ class _TasksModelSheetState extends State<TasksModelSheet> {
                     ),
                     initialEntryMode: DatePickerEntryMode.calendarOnly,
                   );
-                  if (dateTime != null) {
+                  if (dateTime != null && dateTime != selectedDate) {
                     selectedDate = dateTime;
                     setState(() {});
                   }
                 },
-                child: Text(
-                  'Select Date',
-                  style: TextTheme.of(context)
-                      .titleMedium!
-                      .copyWith(color: Appthem.black),
+                child: Column(
+                  children: [
+                    Text(
+                      'Select Date',
+                      style: TextTheme.of(context)
+                          .titleMedium!
+                          .copyWith(color: Appthem.black),
+                    ),
+                    const SizedBox(
+                      height: 5,
+                    ),
+                    Text(
+                      dateFormat.format(selectedDate),
+                      style: TextTheme.of(context).titleSmall,
+                    ),
+                    const SizedBox(
+                      height: 40,
+                    ),
+                    DefaultElevatedBoutton(
+                      text: 'Add',
+                      onPressed: () {
+                        if (formkey.currentState!.validate()) {
+                          addTask();
+                        }
+                      },
+                    ),
+                  ],
                 ),
-              ),
-              const SizedBox(
-                height: 5,
-              ),
-              Text(
-                dateFormat.format(selectedDate),
-                style: TextTheme.of(context).titleSmall,
-              ),
-              const SizedBox(
-                height: 40,
-              ),
-              DefaultElevatedBoutton(
-                text: 'Add',
-                onPressed: () {
-                  if (formkey.currentState!.validate()) {
-                    addTask();
-                  }
-                },
               ),
               const SizedBox(
                 height: 40,
@@ -109,6 +114,9 @@ class _TasksModelSheetState extends State<TasksModelSheet> {
   }
 
   void addTask() {
-    debugPrint('Task added successfully');
+    TaskModel task = TaskModel(
+        title: titelController.text,
+        description: descrptionController.text,
+        date: selectedDate);
   }
 }
