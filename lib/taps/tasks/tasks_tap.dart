@@ -3,6 +3,7 @@ import 'package:todo/appthem.dart';
 import 'package:todo/taps/tasks/task_item.dart';
 import 'package:easy_date_timeline/easy_date_timeline.dart';
 import 'package:todo/taps/tasks/task_model.dart';
+import 'package:todo/widgets/firebasefunctions.dart';
 
 class TasksTap extends StatefulWidget {
   const TasksTap({super.key});
@@ -13,14 +14,12 @@ class TasksTap extends StatefulWidget {
 
 class _TasksTapState extends State<TasksTap> {
   DateTime selectedDate = DateTime.now();
+  List<TaskModel> tasks = [];
   @override
   Widget build(BuildContext context) {
-    List<TaskModel> tasks = List.generate(
-        10,
-        (index) => TaskModel(
-            title: 'task ${index + 1}',
-            description: "description ${index + 1}",
-            date: DateTime.now()));
+    if (tasks.isEmpty) {
+      getTasks();
+    }
     return Column(
       children: [
         Stack(
@@ -82,10 +81,15 @@ class _TasksTapState extends State<TasksTap> {
         Expanded(
           child: ListView.builder(
             itemBuilder: (context, index) => TaskItem(taskModel: tasks[index]),
-            itemCount: 10,
+            itemCount: tasks.length,
           ),
         ),
       ],
     );
+  }
+
+  Future<void> getTasks() async {
+    tasks = await Firebasefunctions.getAllTasksFromFirestore();
+    setState(() {});
   }
 }

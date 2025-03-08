@@ -1,9 +1,11 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:todo/appthem.dart';
 import 'package:todo/taps/tasks/task_model.dart';
 import 'package:todo/widgets/default_elevated_boutton.dart';
 import 'package:todo/widgets/default_text_form_field.dart';
+import 'package:todo/widgets/firebasefunctions.dart';
 
 class TasksModelSheet extends StatefulWidget {
   const TasksModelSheet({super.key});
@@ -118,5 +120,7 @@ class _TasksModelSheetState extends State<TasksModelSheet> {
         title: titelController.text,
         description: descrptionController.text,
         date: selectedDate);
+    Firebasefunctions.addTaskToFireStore(task);
+    Navigator.of(context).pop();
   }
 }
