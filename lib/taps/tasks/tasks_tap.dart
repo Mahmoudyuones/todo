@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:todo/appthem.dart';
 import 'package:todo/taps/tasks/task_item.dart';
 import 'package:easy_date_timeline/easy_date_timeline.dart';
-import 'package:todo/taps/tasks/task_model.dart';
-import 'package:todo/widgets/firebasefunctions.dart';
+import 'package:todo/taps/tasks/task_provider.dart';
 
 class TasksTap extends StatefulWidget {
   const TasksTap({super.key});
@@ -14,12 +14,15 @@ class TasksTap extends StatefulWidget {
 
 class _TasksTapState extends State<TasksTap> {
   DateTime selectedDate = DateTime.now();
-  List<TaskModel> tasks = [];
+  bool shouldGetTasks = true;
   @override
   Widget build(BuildContext context) {
-    if (tasks.isEmpty) {
-      getTasks();
+    TaskProvider taskProvider = Provider.of<TaskProvider>(context);
+    if (shouldGetTasks) {
+      taskProvider.getTasks();
+      shouldGetTasks = false;
     }
+    print('object');
     return Column(
       children: [
         Stack(
@@ -80,16 +83,12 @@ class _TasksTapState extends State<TasksTap> {
         ),
         Expanded(
           child: ListView.builder(
-            itemBuilder: (context, index) => TaskItem(taskModel: tasks[index]),
-            itemCount: tasks.length,
+            itemBuilder: (context, index) =>
+                TaskItem(taskModel: taskProvider.tasks[index]),
+            itemCount: taskProvider.tasks.length,
           ),
         ),
       ],
     );
-  }
-
-  Future<void> getTasks() async {
-    tasks = await Firebasefunctions.getAllTasksFromFirestore();
-    setState(() {});
   }
 }
