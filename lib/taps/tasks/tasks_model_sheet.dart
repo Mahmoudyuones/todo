@@ -1,5 +1,6 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:todo/appthem.dart';
@@ -130,8 +131,27 @@ class _TasksModelSheetState extends State<TasksModelSheet> {
         title: titelController.text,
         description: descrptionController.text,
         date: selectedDate);
-    Firebasefunctions.addTaskToFireStore(task);
-    Navigator.of(context).pop();
-    Provider.of<TaskProvider>(context, listen: false).getTasks();
+    Firebasefunctions.addTaskToFireStore(task).timeout(
+      Duration(milliseconds: 100),
+      onTimeout: () {
+        Navigator.of(context).pop();
+        Provider.of<TaskProvider>(context, listen: false).getTasks();
+        Fluttertoast.showToast(
+            msg: "Task Added Successfully",
+            toastLength: Toast.LENGTH_SHORT,
+            gravity: ToastGravity.BOTTOM,
+            timeInSecForIosWeb: 1,
+            backgroundColor: Colors.green,
+            textColor: Colors.white,
+            fontSize: 16.0);
+      },
+    ).catchError((error) => Fluttertoast.showToast(
+        msg: "Something went Wrong",
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.BOTTOM,
+        timeInSecForIosWeb: 1,
+        backgroundColor: Colors.red,
+        textColor: Colors.white,
+        fontSize: 16.0));
   }
 }
