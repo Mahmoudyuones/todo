@@ -18,7 +18,8 @@ class Firebasefunctions {
 
   static Future<List<TaskModel>> getAllTasksFromFirestore() async {
     CollectionReference<TaskModel> tasksCollections = getTasksCollections();
-    QuerySnapshot<TaskModel> querySnapshot = await tasksCollections.get();
+    QuerySnapshot<TaskModel> querySnapshot =
+        await tasksCollections.orderBy('date', descending: true).get();
     return querySnapshot.docs
         .map((daocSnapshot) => daocSnapshot.data())
         .toList();

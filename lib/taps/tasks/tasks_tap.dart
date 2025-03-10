@@ -13,7 +13,6 @@ class TasksTap extends StatefulWidget {
 }
 
 class _TasksTapState extends State<TasksTap> {
-  DateTime selectedDate = DateTime.now();
   bool shouldGetTasks = true;
   @override
   Widget build(BuildContext context) {
@@ -43,14 +42,14 @@ class _TasksTapState extends State<TasksTap> {
             Padding(
               padding: const EdgeInsets.only(top: 140),
               child: EasyInfiniteDateTimeLine(
-                onDateChange: (date) {
-                  selectedDate = date;
-                  setState(() {});
+                onDateChange: (selectedDate) {
+                  taskProvider.onDateChange(selectedDate);
+                  taskProvider.getTasks();
                 },
                 showTimelineHeader: false,
                 activeColor: Appthem.white,
                 firstDate: DateTime.now().subtract(Duration(days: 365)),
-                focusDate: selectedDate,
+                focusDate: taskProvider.selectedDate,
                 lastDate: DateTime.now().add(
                   Duration(days: 365),
                 ),
@@ -69,13 +68,20 @@ class _TasksTapState extends State<TasksTap> {
                       dayNumStyle: TextTheme.of(context)
                           .titleSmall!
                           .copyWith(color: Appthem.primary)),
+                  todayStyle: DayStyle(
+                    decoration: BoxDecoration(
+                      color: Appthem.white,
+                      borderRadius: BorderRadius.circular(5),
+                    ),
+                  ),
                   inactiveDayStyle: DayStyle(
-                      decoration: BoxDecoration(
-                        color: Appthem.white,
-                        borderRadius: BorderRadius.circular(5),
-                      ),
-                      dayStrStyle: TextTheme.of(context).titleSmall,
-                      dayNumStyle: TextTheme.of(context).titleSmall),
+                    decoration: BoxDecoration(
+                      color: Appthem.white,
+                      borderRadius: BorderRadius.circular(5),
+                    ),
+                    dayStrStyle: TextTheme.of(context).titleSmall,
+                    dayNumStyle: TextTheme.of(context).titleSmall,
+                  ),
                 ),
               ),
             ),
