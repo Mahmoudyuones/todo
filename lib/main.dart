@@ -10,6 +10,7 @@ Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
   await FirebaseFirestore.instance.disableNetwork();
+  await FirebaseFirestore.instance.disableNetwork();
   runApp(
       ChangeNotifierProvider(create: (_) => TaskProvider(), child: TodoApp()));
 }

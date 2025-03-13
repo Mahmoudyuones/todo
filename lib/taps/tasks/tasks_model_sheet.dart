@@ -1,4 +1,3 @@
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:intl/intl.dart';
@@ -141,8 +140,8 @@ class _TasksModelSheetState extends State<TasksModelSheet> {
             toastLength: Toast.LENGTH_SHORT,
             gravity: ToastGravity.BOTTOM,
             timeInSecForIosWeb: 1,
-            backgroundColor: Colors.green,
-            textColor: Colors.white,
+            backgroundColor: Appthem.primary,
+            textColor: Appthem.white,
             fontSize: 16.0);
       },
     ).catchError((error) => Fluttertoast.showToast(
@@ -150,8 +149,8 @@ class _TasksModelSheetState extends State<TasksModelSheet> {
         toastLength: Toast.LENGTH_SHORT,
         gravity: ToastGravity.BOTTOM,
         timeInSecForIosWeb: 1,
-        backgroundColor: Colors.red,
-        textColor: Colors.white,
+        backgroundColor: Appthem.red,
+        textColor: Appthem.white,
         fontSize: 16.0));
   }
 }

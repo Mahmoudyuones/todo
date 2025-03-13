@@ -1,6 +1,12 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:todo/appthem.dart';
 import 'package:todo/taps/tasks/task_model.dart';
+import 'package:flutter_slidable/flutter_slidable.dart';
+import 'package:todo/taps/tasks/task_provider.dart';
+import 'package:todo/widgets/firebasefunctions.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 class TaskItem extends StatelessWidget {
   final TaskModel taskModel;
@@ -9,55 +15,100 @@ class TaskItem extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       margin: const EdgeInsets.only(bottom: 20, left: 20, right: 20),
-      decoration: const BoxDecoration(
-        color: Appthem.white,
-        borderRadius: BorderRadius.all(
-          Radius.circular(15),
-        ),
-      ),
-      child: Row(
-        children: [
-          Container(
-            margin: const EdgeInsets.all(15),
-            decoration: BoxDecoration(
-              color: Appthem.primary,
-              borderRadius: BorderRadius.circular(20),
+      decoration: BoxDecoration(borderRadius: BorderRadius.circular(15)),
+      child: Slidable(
+        key: const ValueKey(0),
+        startActionPane: ActionPane(
+          motion: const ScrollMotion(),
+          dismissible: DismissiblePane(onDismissed: () {
+            deletTask(context);
+          }),
+          children: [
+            SlidableAction(
+              onPressed: (_) {
+                deletTask(context);
+              },
+              backgroundColor: Appthem.red,
+              foregroundColor: Appthem.white,
+              icon: Icons.delete,
+              label: 'Delete',
             ),
-            height: 62,
-            width: 4,
+          ],
+        ),
+        child: Container(
+          decoration: const BoxDecoration(
+            color: Appthem.white,
+            borderRadius: BorderRadius.all(
+              Radius.circular(15),
+            ),
           ),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+          child: Row(
             children: [
-              Text(
-                taskModel.title,
-                style: const TextStyle(
+              Container(
+                margin: const EdgeInsets.all(15),
+                decoration: BoxDecoration(
                   color: Appthem.primary,
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
+                  borderRadius: BorderRadius.circular(20),
+                ),
+                height: 62,
+                width: 4,
+              ),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    taskModel.title,
+                    style: const TextStyle(
+                      color: Appthem.primary,
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  Text(taskModel.description),
+                ],
+              ),
+              const Spacer(),
+              Padding(
+                padding: const EdgeInsets.all(15),
+                child: ElevatedButton(
+                  onPressed: () {},
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Appthem.primary,
+                    iconColor: Appthem.white,
+                    iconSize: 30,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(15),
+                    ),
+                  ),
+                  child: const Icon(Icons.done),
                 ),
               ),
-              Text(taskModel.description),
             ],
           ),
-          const Spacer(),
-          Padding(
-            padding: const EdgeInsets.all(15),
-            child: ElevatedButton(
-              onPressed: () {},
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Appthem.primary,
-                iconColor: Appthem.white,
-                iconSize: 30,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(15),
-                ),
-              ),
-              child: const Icon(Icons.done),
-            ),
-          ),
-        ],
+        ),
       ),
+    );
+  }
+
+  void deletTask(BuildContext context) {
+    Firebasefunctions.deleteTaskFromFirestore(taskModel.id).timeout(
+      const Duration(microseconds: 100),
+      onTimeout: () {
+        Fluttertoast.showToast(
+          msg: 'Task Deleted',
+          toastLength: Toast.LENGTH_SHORT,
+          backgroundColor: Appthem.green,
+        );
+        return Provider.of<TaskProvider>(context, listen: false).getTasks();
+      },
+    ).catchError(
+      (_) {
+        Fluttertoast.showToast(
+          msg: 'Something went wrong',
+          toastLength: Toast.LENGTH_SHORT,
+          backgroundColor: Appthem.red,
+        );
+      },
     );
   }
 }

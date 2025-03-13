@@ -24,4 +24,9 @@ class Firebasefunctions {
         .map((daocSnapshot) => daocSnapshot.data())
         .toList();
   }
+
+  static Future<void> deleteTaskFromFirestore(String id) async {
+    CollectionReference<TaskModel> tasksCollections = getTasksCollections();
+    return tasksCollections.doc(id).delete();
+  }
 }
