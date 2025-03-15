@@ -10,10 +10,12 @@ class DefaultTextFormField extends StatelessWidget {
   final TextEditingController controller;
   final String hintText;
   final String? Function(String?)? validator;
+
   @override
   Widget build(BuildContext context) {
     return TextFormField(
       controller: controller,
+      autovalidateMode: AutovalidateMode.onUserInteraction,
       decoration: InputDecoration(
         hintText: hintText,
         hintStyle: Theme.of(context)
