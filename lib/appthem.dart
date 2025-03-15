@@ -12,6 +12,8 @@ class Appthem {
   static ThemeData lighappthem = ThemeData(
     primaryColor: primary,
     scaffoldBackgroundColor: backgroundLight,
+    appBarTheme:
+        AppBarTheme(backgroundColor: Colors.transparent, centerTitle: true),
     bottomNavigationBarTheme: BottomNavigationBarThemeData(
       type: BottomNavigationBarType.fixed,
       backgroundColor: white,
