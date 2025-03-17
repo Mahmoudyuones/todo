@@ -2,7 +2,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:todo/appthem.dart';
-import 'package:todo/taps/tasks/task_model.dart';
+import 'package:todo/models/task_model.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:todo/taps/tasks/task_provider.dart';
 import 'package:todo/widgets/firebasefunctions.dart';

@@ -3,7 +3,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:todo/appthem.dart';
-import 'package:todo/taps/tasks/task_model.dart';
+import 'package:todo/models/task_model.dart';
 import 'package:todo/taps/tasks/task_provider.dart';
 import 'package:todo/widgets/default_elevated_boutton.dart';
 import 'package:todo/widgets/default_text_form_field.dart';
