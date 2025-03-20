@@ -95,6 +95,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
   void register() {
     if (formkey.currentState!.validate()) {
+      FocusScope.of(context).unfocus();
       Firebasefunctions.register(
               name: nameController.text,
               email: emailController.text,

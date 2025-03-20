@@ -85,6 +85,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
   void login() {
     if (formkey.currentState!.validate()) {
+      FocusScope.of(context).unfocus();
       Firebasefunctions.login(
               email: emailcontroller.text, password: passwordcontroller.text)
           .then((user) {
