@@ -94,9 +94,8 @@ class TaskItem extends StatelessWidget {
   }
 
   void deletTask(BuildContext context, String userId) {
-    Firebasefunctions.deleteTaskFromFirestore(taskModel.id, userId).timeout(
-      const Duration(microseconds: 100),
-      onTimeout: () {
+    Firebasefunctions.deleteTaskFromFirestore(taskModel.id, userId).then(
+      (value) {
         Fluttertoast.showToast(
           msg: 'Task Deleted',
           toastLength: Toast.LENGTH_SHORT,

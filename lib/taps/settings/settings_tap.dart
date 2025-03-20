@@ -4,6 +4,7 @@ import 'package:todo/appthem.dart';
 import 'package:todo/auth/login_screen.dart';
 import 'package:todo/auth/user_provider.dart';
 import 'package:todo/taps/tasks/task_provider.dart';
+import 'package:todo/widgets/firebasefunctions.dart';
 
 class SettingsTap extends StatelessWidget {
   const SettingsTap({super.key});
@@ -24,6 +25,7 @@ class SettingsTap extends StatelessWidget {
                         )),
                 IconButton(
                     onPressed: () {
+                      Firebasefunctions.signOut();
                       Provider.of<UserProvider>(context, listen: false)
                           .updateUser(null);
                       Provider.of<TaskProvider>(context, listen: false)

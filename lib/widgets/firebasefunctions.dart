@@ -65,5 +65,5 @@ class Firebasefunctions {
     return docSnapshot.data()!;
   }
 
-  Future<void> signOut() => FirebaseAuth.instance.signOut();
+  static Future<void> signOut() => FirebaseAuth.instance.signOut();
 }
