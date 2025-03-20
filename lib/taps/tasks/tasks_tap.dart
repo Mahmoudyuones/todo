@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:todo/appthem.dart';
+import 'package:todo/auth/user_provider.dart';
 import 'package:todo/taps/tasks/task_item.dart';
 import 'package:easy_date_timeline/easy_date_timeline.dart';
 import 'package:todo/taps/tasks/task_provider.dart';
@@ -17,11 +18,11 @@ class _TasksTapState extends State<TasksTap> {
   @override
   Widget build(BuildContext context) {
     TaskProvider taskProvider = Provider.of<TaskProvider>(context);
+    String userId = Provider.of<UserProvider>(context).currentUser!.id;
     if (shouldGetTasks) {
-      taskProvider.getTasks();
+      taskProvider.getTasks(userId);
       shouldGetTasks = false;
     }
-    print('object');
     return Column(
       children: [
         Stack(
@@ -43,15 +44,14 @@ class _TasksTapState extends State<TasksTap> {
               padding: const EdgeInsets.only(top: 140),
               child: EasyInfiniteDateTimeLine(
                 onDateChange: (selectedDate) {
-                  taskProvider.onDateChange(selectedDate);
-                  taskProvider.getTasks();
+                  taskProvider.getSelectedDateTasks(selectedDate, userId);
                 },
                 showTimelineHeader: false,
                 activeColor: Appthem.white,
                 firstDate: DateTime.now().subtract(Duration(days: 365)),
                 focusDate: taskProvider.selectedDate,
                 lastDate: DateTime.now().add(
-                  Duration(days: 365),
+                  const Duration(days: 365),
                 ),
                 dayProps: EasyDayProps(
                   height: MediaQuery.sizeOf(context).height * .1,

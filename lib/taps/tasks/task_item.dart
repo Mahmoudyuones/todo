@@ -2,6 +2,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:todo/appthem.dart';
+import 'package:todo/auth/user_provider.dart';
 import 'package:todo/models/task_model.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:todo/taps/tasks/task_provider.dart';
@@ -11,8 +12,10 @@ import 'package:fluttertoast/fluttertoast.dart';
 class TaskItem extends StatelessWidget {
   final TaskModel taskModel;
   const TaskItem({super.key, required this.taskModel});
+
   @override
   Widget build(BuildContext context) {
+    String userId = Provider.of<UserProvider>(context).currentUser!.id;
     return Container(
       margin: const EdgeInsets.only(bottom: 20, left: 20, right: 20),
       decoration: BoxDecoration(borderRadius: BorderRadius.circular(15)),
@@ -21,12 +24,12 @@ class TaskItem extends StatelessWidget {
         startActionPane: ActionPane(
           motion: const ScrollMotion(),
           dismissible: DismissiblePane(onDismissed: () {
-            deletTask(context);
+            deletTask(context, userId);
           }),
           children: [
             SlidableAction(
               onPressed: (_) {
-                deletTask(context);
+                deletTask(context, userId);
               },
               backgroundColor: Appthem.red,
               foregroundColor: Appthem.white,
@@ -90,8 +93,8 @@ class TaskItem extends StatelessWidget {
     );
   }
 
-  void deletTask(BuildContext context) {
-    Firebasefunctions.deleteTaskFromFirestore(taskModel.id).timeout(
+  void deletTask(BuildContext context, String userId) {
+    Firebasefunctions.deleteTaskFromFirestore(taskModel.id, userId).timeout(
       const Duration(microseconds: 100),
       onTimeout: () {
         Fluttertoast.showToast(
@@ -99,7 +102,8 @@ class TaskItem extends StatelessWidget {
           toastLength: Toast.LENGTH_SHORT,
           backgroundColor: Appthem.green,
         );
-        return Provider.of<TaskProvider>(context, listen: false).getTasks();
+        return Provider.of<TaskProvider>(context, listen: false)
+            .getTasks(userId);
       },
     ).catchError(
       (_) {

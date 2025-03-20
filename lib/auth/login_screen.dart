@@ -1,6 +1,14 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:provider/provider.dart';
+import 'package:todo/appthem.dart';
+import 'package:todo/auth/user_provider.dart';
+import 'package:todo/home_screen.dart';
 import 'package:todo/widgets/default_elevated_boutton.dart';
 import 'package:todo/widgets/default_login_and_register_text_form_fieled.dart';
+import 'package:todo/widgets/firebasefunctions.dart';
 
 class LoginScreen extends StatefulWidget {
   static const String routeName = '/login';
@@ -49,8 +57,9 @@ class _LoginScreenState extends State<LoginScreen> {
                   label: 'Password',
                   controller: passwordcontroller,
                   validator: (value) {
-                    if (value == null || value.trim().length < 8)
+                    if (value == null || value.trim().length < 8) {
                       return 'Password can not be less than 8 charactar';
+                    }
                   },
                   isPassword: true,
                 ),
@@ -76,7 +85,27 @@ class _LoginScreenState extends State<LoginScreen> {
 
   void login() {
     if (formkey.currentState!.validate()) {
-      print('login');
+      Firebasefunctions.login(
+              email: emailcontroller.text, password: passwordcontroller.text)
+          .then((user) {
+        Provider.of<UserProvider>(context, listen: false).updateUser(user);
+        Navigator.of(context).pushReplacementNamed(HomeScreen.routeName);
+      }).catchError(
+        (error) {
+          String? message;
+          if (error is FirebaseAuthException) {
+            message = error.message;
+          }
+          Fluttertoast.showToast(
+              msg: message ?? "Something went Wrong",
+              toastLength: Toast.LENGTH_SHORT,
+              gravity: ToastGravity.BOTTOM,
+              timeInSecForIosWeb: 1,
+              backgroundColor: Appthem.red,
+              textColor: Appthem.white,
+              fontSize: 16.0);
+        },
+      );
     }
   }
 }

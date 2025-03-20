@@ -4,13 +4,6 @@ import 'package:todo/models/user_model.dart';
 import 'package:todo/models/task_model.dart';
 
 class Firebasefunctions {
-  static CollectionReference<TaskModel> getTasksCollections() {
-    return FirebaseFirestore.instance.collection('tasks').withConverter(
-          fromFirestore: (snapshot, _) => TaskModel.fromjson(snapshot.data()!),
-          toFirestore: (taskModel, _) => taskModel.tojson(),
-        );
-  }
-
   static CollectionReference<UserModel> getUsersCollections() {
     return FirebaseFirestore.instance.collection('Users').withConverter(
           fromFirestore: (snapshot, _) => UserModel.fromjson(snapshot.data()!),
@@ -18,15 +11,24 @@ class Firebasefunctions {
         );
   }
 
-  static Future<void> addTaskToFireStore(TaskModel task) {
-    CollectionReference<TaskModel> tasksCollections = getTasksCollections();
+  static CollectionReference<TaskModel> getTasksCollections(String userId) {
+    return getUsersCollections().doc(userId).collection('tasks').withConverter(
+          fromFirestore: (snapshot, _) => TaskModel.fromjson(snapshot.data()!),
+          toFirestore: (taskModel, _) => taskModel.tojson(),
+        );
+  }
+
+  static Future<void> addTaskToFireStore(TaskModel task, String userId) {
+    CollectionReference<TaskModel> tasksCollections =
+        getTasksCollections(userId);
     DocumentReference<TaskModel> doc = tasksCollections.doc();
     task.id = doc.id;
     return doc.set(task);
   }
 
-  static Future<List<TaskModel>> getAllTasksFromFirestore() async {
-    CollectionReference<TaskModel> tasksCollections = getTasksCollections();
+  static Future<List<TaskModel>> getAllTasksFromFirestore(String userId) async {
+    CollectionReference<TaskModel> tasksCollections =
+        getTasksCollections(userId);
     QuerySnapshot<TaskModel> querySnapshot =
         await tasksCollections.orderBy('date', descending: true).get();
     return querySnapshot.docs
@@ -34,8 +36,9 @@ class Firebasefunctions {
         .toList();
   }
 
-  static Future<void> deleteTaskFromFirestore(String id) async {
-    CollectionReference<TaskModel> tasksCollections = getTasksCollections();
+  static Future<void> deleteTaskFromFirestore(String id, String userId) async {
+    CollectionReference<TaskModel> tasksCollections =
+        getTasksCollections(userId);
     return tasksCollections.doc(id).delete();
   }
 

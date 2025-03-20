@@ -1,8 +1,10 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:todo/appthem.dart';
+import 'package:todo/auth/user_provider.dart';
 import 'package:todo/models/task_model.dart';
 import 'package:todo/taps/tasks/task_provider.dart';
 import 'package:todo/widgets/default_elevated_boutton.dart';
@@ -126,31 +128,34 @@ class _TasksModelSheetState extends State<TasksModelSheet> {
   }
 
   void addTask() {
+    String userId =
+        Provider.of<UserProvider>(context, listen: false).currentUser!.id;
     TaskModel task = TaskModel(
         title: titelController.text,
         description: descrptionController.text,
         date: selectedDate);
-    Firebasefunctions.addTaskToFireStore(task).timeout(
-      Duration(milliseconds: 100),
-      onTimeout: () {
-        Navigator.of(context).pop();
-        Provider.of<TaskProvider>(context, listen: false).getTasks();
-        Fluttertoast.showToast(
-            msg: "Task Added Successfully",
-            toastLength: Toast.LENGTH_SHORT,
-            gravity: ToastGravity.BOTTOM,
-            timeInSecForIosWeb: 1,
-            backgroundColor: Appthem.primary,
-            textColor: Appthem.white,
-            fontSize: 16.0);
-      },
-    ).catchError((error) => Fluttertoast.showToast(
-        msg: "Something went Wrong",
-        toastLength: Toast.LENGTH_SHORT,
-        gravity: ToastGravity.BOTTOM,
-        timeInSecForIosWeb: 1,
-        backgroundColor: Appthem.red,
-        textColor: Appthem.white,
-        fontSize: 16.0));
+
+    Firebasefunctions.addTaskToFireStore(task, userId).then((value) {
+      Navigator.of(context).pop();
+      Provider.of<TaskProvider>(context, listen: false).getTasks(userId);
+
+      Fluttertoast.showToast(
+          msg: "Task Added Successfully",
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.BOTTOM,
+          timeInSecForIosWeb: 1,
+          backgroundColor: Appthem.primary,
+          textColor: Appthem.white,
+          fontSize: 16.0);
+    }).catchError((_) {
+      Fluttertoast.showToast(
+          msg: "Something went Wrong",
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.BOTTOM,
+          timeInSecForIosWeb: 1,
+          backgroundColor: Appthem.red,
+          textColor: Appthem.white,
+          fontSize: 16.0);
+    });
   }
 }
