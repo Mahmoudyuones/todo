@@ -1,4 +1,3 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:intl/intl.dart';
@@ -54,6 +53,8 @@ class _TasksModelSheetState extends State<TasksModelSheet> {
                   validator: (value) {
                     if (value == null || value.trim().isEmpty) {
                       return 'Please Enter the Task Name';
+                    } else if (value.length > 15) {
+                      return 'Task Name should be less than 15 characters';
                     }
                     return null;
                   },
@@ -67,6 +68,8 @@ class _TasksModelSheetState extends State<TasksModelSheet> {
                   validator: (value) {
                     if (value == null || value.trim().isEmpty) {
                       return "Please Enter the Task Description";
+                    } else if (value.length > 15) {
+                      return 'Task Description should be less than 15 characters';
                     }
                     return null;
                   },
