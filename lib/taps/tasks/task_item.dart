@@ -9,10 +9,15 @@ import 'package:todo/taps/tasks/task_provider.dart';
 import 'package:todo/widgets/firebasefunctions.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
-class TaskItem extends StatelessWidget {
+class TaskItem extends StatefulWidget {
   final TaskModel taskModel;
   const TaskItem({super.key, required this.taskModel});
 
+  @override
+  State<TaskItem> createState() => _TaskItemState();
+}
+
+class _TaskItemState extends State<TaskItem> {
   @override
   Widget build(BuildContext context) {
     String userId = Provider.of<UserProvider>(context).currentUser!.id;
@@ -50,7 +55,8 @@ class TaskItem extends StatelessWidget {
               Container(
                 margin: const EdgeInsets.all(15),
                 decoration: BoxDecoration(
-                  color: Appthem.primary,
+                  color:
+                      widget.taskModel.isDone ? Appthem.green : Appthem.primary,
                   borderRadius: BorderRadius.circular(20),
                 ),
                 height: 62,
@@ -60,32 +66,61 @@ class TaskItem extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    taskModel.title,
-                    style: const TextStyle(
-                      color: Appthem.primary,
+                    widget.taskModel.title,
+                    style: TextStyle(
+                      color: widget.taskModel.isDone
+                          ? Appthem.green
+                          : Appthem.primary,
                       fontSize: 18,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
-                  Text(taskModel.description),
+                  Text(
+                    widget.taskModel.description,
+                    style: TextStyle(
+                      color: widget.taskModel.isDone
+                          ? Appthem.green
+                          : Appthem.primary,
+                      fontSize: 18,
+                      fontWeight: FontWeight.w400,
+                    ),
+                  )
                 ],
               ),
               const Spacer(),
-              Padding(
-                padding: const EdgeInsets.all(15),
-                child: ElevatedButton(
-                  onPressed: () {},
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Appthem.primary,
-                    iconColor: Appthem.white,
-                    iconSize: 30,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(15),
-                    ),
-                  ),
-                  child: const Icon(Icons.done),
-                ),
-              ),
+              widget.taskModel.isDone
+                  ? Padding(
+                      padding: const EdgeInsets.all(15),
+                      child: TextButton(
+                        child: Text(
+                          "Done!",
+                          style: Theme.of(context)
+                              .textTheme
+                              .titleMedium!
+                              .copyWith(color: Appthem.green, fontSize: 22),
+                        ),
+                        onPressed: () {
+                          isDone(userId);
+                        },
+                      ),
+                    )
+                  : Padding(
+                      padding: const EdgeInsets.all(15),
+                      child: ElevatedButton(
+                        onPressed: () {
+                          isDone(userId);
+                        },
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Appthem.primary,
+                          iconColor: Appthem.white,
+                          iconSize: 30,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(15),
+                          ),
+                        ),
+                        child: const Icon(Icons.done),
+                      ),
+                    )
             ],
           ),
         ),
@@ -94,7 +129,7 @@ class TaskItem extends StatelessWidget {
   }
 
   void deletTask(BuildContext context, String userId) {
-    Firebasefunctions.deleteTaskFromFirestore(taskModel.id, userId).then(
+    Firebasefunctions.deleteTaskFromFirestore(widget.taskModel.id, userId).then(
       (value) {
         Fluttertoast.showToast(
           msg: 'Task Deleted',
@@ -113,5 +148,11 @@ class TaskItem extends StatelessWidget {
         );
       },
     );
+  }
+
+  void isDone(String userId) {
+    widget.taskModel.isDone = !widget.taskModel.isDone;
+    Firebasefunctions.updateTaskInFirestore(widget.taskModel, userId);
+    setState(() {});
   }
 }

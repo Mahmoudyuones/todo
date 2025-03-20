@@ -36,6 +36,12 @@ class Firebasefunctions {
         .toList();
   }
 
+  static Future<void> updateTaskInFirestore(TaskModel task, String userId) {
+    CollectionReference<TaskModel> tasksCollections =
+        getTasksCollections(userId);
+    return tasksCollections.doc(task.id).set(task);
+  }
+
   static Future<void> deleteTaskFromFirestore(String id, String userId) async {
     CollectionReference<TaskModel> tasksCollections =
         getTasksCollections(userId);
